@@ -7,14 +7,27 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -42,7 +55,6 @@ class MainActivity : ComponentActivity() {
 
         phimLeViewModel.listPhimLe.observe(this, Observer {
                 data ->
-            Log.d("NguyenNK2","data.titlePage "+ data.items.get(0).slug)
             listPhimLe = data.items as ArrayList<ItemPhimLe>
             setContent {
                 MovieAppTheme {
@@ -50,13 +62,26 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                         shape = RectangleShape
                     ) {
-                        listPhimLe?.let { RecycleView(it) {
-                                selectedItem ->
-                            // Handle item click
-                            val intent = Intent(this@MainActivity, PlayMovieActivity::class.java)
-                            intent.putExtra("selectedMovie", selectedItem.slug)
-                            startActivity(intent)
-                        } }
+                        Column(
+                            modifier = Modifier.padding(8.dp).fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "Movie app",
+                                color = Color.Red,
+                                modifier = Modifier
+                                    .size(60.dp),
+                                maxLines = 1, // Ensure the text is displayed on a single line
+                                //overflow = TextOverflow.Ellipsis // Handle overflow if text is too long
+                            )
+
+                            listPhimLe?.let { RecycleView(it) {
+                                    selectedItem ->
+                                // Handle item click
+                                val intent = Intent(this@MainActivity, PlayMovieActivity::class.java)
+                                intent.putExtra("selectedMovie", selectedItem.slug)
+                                startActivity(intent)
+                            } }
+                        }
                     }
                 }
             }
@@ -74,15 +99,36 @@ class MainActivity : ComponentActivity() {
 @ExperimentalTvMaterial3Api
 @Composable
 fun RecycleView(listPhimLe: List<ItemPhimLe>, onItemClick: (ItemPhimLe) -> Unit) {
-    LazyColumn(modifier = Modifier.padding(horizontal = 10.dp)){
+    LazyRow(modifier = Modifier.padding(horizontal = 10.dp)){
 
         items(items = listPhimLe){
             item ->
-            Surface(modifier = Modifier.padding(vertical = 4.dp, horizontal = 10.dp)) {
-                Text(text = item.name, modifier = Modifier
-                    .clickable {
-                        onItemClick(item)
-                    })
+            Box(
+                modifier = Modifier
+                    .padding(4.dp)
+                    .size(120.dp, 200.dp)
+                    .border(2.dp, Color.Gray, RoundedCornerShape(8.dp))
+                    .clickable { onItemClick(item) }
+            ) {
+//                Image(
+//                    painter = painterResource(id = item.thumbURL),
+//                    contentDescription = null,
+//                    modifier = Modifier
+//                        .fillMaxSize()
+//                        .align(Alignment.Center),
+//                )
+
+                Text(
+                    text = item.name,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(8.dp)
+                        .clickable {
+                    onItemClick(item)
+                    }
+                )
             }
 
         }

@@ -1,12 +1,12 @@
 package com.nguyennk.movieapp.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.nguyennk.movieapp.model.DataPhimLe
-import com.nguyennk.movieapp.model.DetailMovie
 import com.nguyennk.movieapp.model.Episode
 import com.nguyennk.movieapp.repository.PhimLeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,11 +40,11 @@ class PhimLeViewModel(private val repository:PhimLeRepository) : ViewModel(),
     fun playMovie(slug:String) {
         viewModelScope.launch {
             try {
-                val phimLe = repo.playMovie(slug)
-                _playMovie.value = phimLe.get(0)
+                val playMovie = repo.playMovie(slug)
+                _playMovie.value = playMovie.get(0)
             } catch (e: Exception) {
                 // Handle error appropriately, such as showing an error message
-                //Log.e(TAG, "Failed to load TV shows", e)
+                Log.e("NguyenNK2", "Failed to load TV shows", e)
             }
         }
     }

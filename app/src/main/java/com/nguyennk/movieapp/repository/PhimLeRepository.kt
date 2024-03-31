@@ -13,8 +13,10 @@ class PhimLeRepository {
     }
 
     suspend fun playMovie(slug: String): List<Episode> {
-        Log.d("NguyenNK2","playMovie msg "+apiService.playMovie(slug).episodes)
-        return apiService.playMovie(slug).episodes // Assuming TVService has appropriate endpoints and data models
+        val response = apiService.playMovie(slug)
+        Log.d("NguyenNK2", "Response from playMovie: $response")
+//        Log.d("NguyenNK2", "playMovie msg $apiService")
+        return response.episodes // Assuming TVService has appropriate endpoints and data models
     }
 
 

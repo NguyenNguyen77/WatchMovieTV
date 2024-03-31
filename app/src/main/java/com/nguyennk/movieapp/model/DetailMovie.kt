@@ -18,22 +18,25 @@ data class DetailMovie (
 
 data class Episode (
     @Json(name = "server_name")
-    val serverName: String,
+    val server_name: String,
 
     @Json(name = "server_data")
-    val serverData: List<ServerDatum>
+    val server_data: List<ServerDatum>
 )
 
 data class ServerDatum (
+    @Json(name = "name")
     val name: String,
+    @Json(name = "slug")
     val slug: String,
+    @Json(name = "filename")
     val filename: String,
 
     @Json(name = "link_embed")
-    val linkEmbed: String,
+    val link_embed: String,
 
     @Json(name = "link_m3u8")
-    val linkM3U8: String
+    val link_m3u8: String
 )
 
 data class Movie (

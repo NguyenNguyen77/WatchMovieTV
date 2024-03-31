@@ -6,16 +6,18 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.tv.material3.MaterialTheme
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.ui.StyledPlayerView
@@ -33,25 +35,21 @@ class PlayMovieActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         // Initialize ViewModel
         phimLeViewModel = ViewModelProvider(this, PhimLeViewModelFactory(repository))[PhimLeViewModel::class.java]
+        val selectedItem = intent.getStringExtra("selectedMovie")
+        phimLeViewModel.playMovie(selectedItem.toString())
 
         phimLeViewModel.playMovie.observe(this, Observer {
                 data ->
-            val selectedItem = intent.getStringExtra("selectedMovie")
-            Log.d("NguyenNK2", "selectedItem $selectedItem")
+            Log.d("NguyenNK2", "data $data")
             setContent {
                 MovieAppTheme {
                     // A surface container using the 'background' color from the theme
                     Surface(
                         modifier = Modifier.fillMaxSize(),
-                        color = MaterialTheme.colorScheme.background
+                        shape = RectangleShape ,
+                        color = Color.Black
                     ) {
-
-                        LaunchedEffect(phimLeViewModel) {
-                            phimLeViewModel.playMovie(selectedItem.toString())
-                        }
-
-                        Log.d("NguyenNK2","linkM3U8 "+ data.serverData[0].linkM3U8)
-                        GreetingPreview(data.serverData[0].linkM3U8)
+                        GreetingPreview(data.server_data[0].link_m3u8)
                     }
                 }
             }
@@ -63,7 +61,7 @@ class PlayMovieActivity : ComponentActivity() {
 
 @Composable
 fun GreetingPreview(selectedItem: String?) {
-
+    Log.d("NguyenNK2", "linkM3U8 $selectedItem")
     val context = LocalContext.current
 //    val urlMovie = "https://s3.phim1280.tv/20240326/clEO3CMF/index.m3u8";
     val exoPlayer = ExoPlayer.Builder(context).build()
