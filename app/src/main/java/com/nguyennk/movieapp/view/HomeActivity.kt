@@ -15,21 +15,32 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -39,6 +50,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
+import coil.compose.AsyncImage
+import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
+import com.nguyennk.movieapp.R
 import com.nguyennk.movieapp.model.ItemPhimLe
 import com.nguyennk.movieapp.repository.PhimLeRepository
 import com.nguyennk.movieapp.ui.theme.MovieAppTheme
@@ -82,14 +97,13 @@ class MainActivity : ComponentActivity() {
                                     .fillMaxWidth()
                             ) {
                                 Text(
-                                    text = "Fake_Netflix",
+                                    text = "Netflix(Fake)",
                                     color = Color.Red,
                                     modifier = Modifier
                                         .padding(4.dp)
                                         .fillMaxWidth(), // Make the text span full width
                                     fontSize = 30.sp,
                                     textAlign = TextAlign.Start,
-                                    //overflow = TextOverflow.Ellipsis // Handle overflow if text is to long
                                 )
 
                                 Text(
@@ -100,7 +114,6 @@ class MainActivity : ComponentActivity() {
                                         .fillMaxWidth(), // Make the text span full width
                                     fontSize = 20.sp,
                                     textAlign = TextAlign.Start,
-                                    //overflow = TextOverflow.Ellipsis // Handle overflow if text is to long
                                 )
 
                                 listPhimLe?.let { RecycleView(it) {
@@ -119,7 +132,6 @@ class MainActivity : ComponentActivity() {
                                         .fillMaxWidth(), // Make the text span full width
                                     fontSize = 20.sp,
                                     textAlign = TextAlign.Start,
-                                    //overflow = TextOverflow.Ellipsis // Handle overflow if text is to long
                                 )
 
                                 listPhimBo?.let { RecycleView(it) {
@@ -153,34 +165,54 @@ fun RecycleView(listPhimLe: List<ItemPhimLe>, onItemClick: (ItemPhimLe) -> Unit)
 
         items(items = listPhimLe){
             item ->
-            Box(
+            Column(
                 modifier = Modifier
-                    .padding(4.dp)
-                    .size(100.dp, 150.dp)
-                    .border(2.dp, Color.Gray, RoundedCornerShape(8.dp))
+                    //.padding(4.dp)
+                    .width(100.dp)
+                    //.size(100.dp, 170.dp)
+                    //.border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
                     .clickable { onItemClick(item) }
-            ) {
-//                Image(
-//                    painter = painterResource(id = item.thumbURL),
-//                    contentDescription = null,
-//                    modifier = Modifier
-//                        .fillMaxSize()
-//                        .align(Alignment.Center),
-//                )
-
+            ){
+                Log.d("NguyenNK2", "item.thumbURL: https://img.phimapi.com/${item.poster_url}")
+                LoadImageFromUrlWithDefault("https://img.phimapi.com/"+item.poster_url, item.name)
                 Text(
                     text = item.name,
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.White,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 2,
                     modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(8.dp)
+                        .padding(4.dp)
+                        .fillMaxWidth()
                         .clickable {
                             onItemClick(item)
                         }
                 )
             }
 
+
         }
     }
+}
+
+@Composable
+fun LoadImageFromUrlWithDefault(
+    url: String,
+    description: String
+) {
+
+    val matrix = ColorMatrix()
+    matrix.setToSaturation(1F)
+    AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(url)
+            .crossfade(true)
+            .build(),
+        contentDescription = description,
+        contentScale = ContentScale.Inside,
+        modifier = Modifier
+            .padding(4.dp)
+            .size(80.dp, 120.dp),
+        colorFilter = ColorFilter.colorMatrix(matrix)
+    )
 }

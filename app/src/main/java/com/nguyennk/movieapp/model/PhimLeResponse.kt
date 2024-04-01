@@ -66,10 +66,10 @@ data class ItemPhimLe (
     val type: Type,
 
     @Json(name = "poster_url")
-    val posterURL: String,
+    val poster_url: String,
 
     @Json(name = "thumb_url")
-    val thumbURL: String,
+    val thumb_url: String,
 
     @Json(name = "sub_docquyen")
     val subDocquyen: Boolean,
