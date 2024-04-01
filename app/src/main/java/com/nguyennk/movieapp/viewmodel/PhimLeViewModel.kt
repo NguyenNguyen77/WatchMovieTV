@@ -16,20 +16,35 @@ import kotlinx.coroutines.launch
 class PhimLeViewModel(private val repository:PhimLeRepository) : ViewModel(),
     ViewModelProvider.Factory {
 
-    private val _movieShow = MutableLiveData<DataPhimLe>()
+    private val _movieShowLe = MutableLiveData<DataPhimLe>()
+    private val _movieShowBo = MutableLiveData<DataPhimLe>()
     private val _playMovie = MutableLiveData<Episode>()
-    val listPhimLe: LiveData<DataPhimLe> = _movieShow
+    val listPhimLe: LiveData<DataPhimLe> = _movieShowLe
+    val listPhimBo: LiveData<DataPhimLe> = _movieShowBo
     val playMovie: LiveData<Episode> = _playMovie
     private val repo = PhimLeRepository()
     init {
         loadPhimLe()
+        loadPhimBo()
     }
 
     private fun loadPhimLe() {
         viewModelScope.launch {
             try {
                 val phimLe = repo.getPhimLe()
-                _movieShow.value = phimLe
+                _movieShowLe.value = phimLe
+            } catch (e: Exception) {
+                // Handle error appropriately, such as showing an error message
+                //Log.e(TAG, "Failed to load TV shows", e)
+            }
+        }
+    }
+
+    private fun loadPhimBo() {
+        viewModelScope.launch {
+            try {
+                val phimBo = repo.getPhimBo()
+                _movieShowBo.value = phimBo
             } catch (e: Exception) {
                 // Handle error appropriately, such as showing an error message
                 //Log.e(TAG, "Failed to load TV shows", e)

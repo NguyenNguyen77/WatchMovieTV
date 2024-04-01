@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -21,14 +22,18 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.tv.material3.ExperimentalTvMaterial3Api
@@ -45,6 +50,7 @@ class MainActivity : ComponentActivity() {
     private val repository = PhimLeRepository()
     private lateinit var phimLeViewModel: PhimLeViewModel
     private var listPhimLe = ArrayList<ItemPhimLe>()
+    private var listPhimBo = ArrayList<ItemPhimLe>()
 
 
     @OptIn(ExperimentalTvMaterial3Api::class)
@@ -52,7 +58,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         // Initialize ViewModel
         phimLeViewModel = ViewModelProvider(this, PhimLeViewModelFactory(repository))[PhimLeViewModel::class.java]
-
+        phimLeViewModel.listPhimBo.observe(this, Observer {
+                data ->
+            listPhimBo = data.items as ArrayList<ItemPhimLe>
+        })
         phimLeViewModel.listPhimLe.observe(this, Observer {
                 data ->
             listPhimLe = data.items as ArrayList<ItemPhimLe>
@@ -62,26 +71,67 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                         shape = RectangleShape
                     ) {
-                        Column(
-                            modifier = Modifier.padding(8.dp).fillMaxWidth()
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                //.background(Color(0xFFE1E1E1), shape = RectangleShape)
                         ) {
-                            Text(
-                                text = "Movie app",
-                                color = Color.Red,
+                            Column(
                                 modifier = Modifier
-                                    .size(60.dp),
-                                maxLines = 1, // Ensure the text is displayed on a single line
-                                //overflow = TextOverflow.Ellipsis // Handle overflow if text is too long
-                            )
+                                    .padding(8.dp)
+                                    .fillMaxWidth()
+                            ) {
+                                Text(
+                                    text = "Fake_Netflix",
+                                    color = Color.Red,
+                                    modifier = Modifier
+                                        .padding(4.dp)
+                                        .fillMaxWidth(), // Make the text span full width
+                                    fontSize = 30.sp,
+                                    textAlign = TextAlign.Start,
+                                    //overflow = TextOverflow.Ellipsis // Handle overflow if text is to long
+                                )
 
-                            listPhimLe?.let { RecycleView(it) {
-                                    selectedItem ->
-                                // Handle item click
-                                val intent = Intent(this@MainActivity, PlayMovieActivity::class.java)
-                                intent.putExtra("selectedMovie", selectedItem.slug)
-                                startActivity(intent)
-                            } }
+                                Text(
+                                    text = "Phim lẻ",
+                                    color = Color.Gray,
+                                    modifier = Modifier
+                                        .padding(4.dp)
+                                        .fillMaxWidth(), // Make the text span full width
+                                    fontSize = 20.sp,
+                                    textAlign = TextAlign.Start,
+                                    //overflow = TextOverflow.Ellipsis // Handle overflow if text is to long
+                                )
+
+                                listPhimLe?.let { RecycleView(it) {
+                                        selectedItem ->
+                                    // Handle item click
+                                    val intent = Intent(this@MainActivity, PlayMovieActivity::class.java)
+                                    intent.putExtra("selectedMovie", selectedItem.slug)
+                                    startActivity(intent)
+                                } }
+
+                                Text(
+                                    text = "Phim bộ",
+                                    color = Color.Gray,
+                                    modifier = Modifier
+                                        .padding(4.dp)
+                                        .fillMaxWidth(), // Make the text span full width
+                                    fontSize = 20.sp,
+                                    textAlign = TextAlign.Start,
+                                    //overflow = TextOverflow.Ellipsis // Handle overflow if text is to long
+                                )
+
+                                listPhimBo?.let { RecycleView(it) {
+                                        selectedItem ->
+                                    // Handle item click
+                                    val intent = Intent(this@MainActivity, PlayMovieActivity::class.java)
+                                    intent.putExtra("selectedMovie", selectedItem.slug)
+                                    startActivity(intent)
+                                } }
+                            }
                         }
+
                     }
                 }
             }
@@ -106,7 +156,7 @@ fun RecycleView(listPhimLe: List<ItemPhimLe>, onItemClick: (ItemPhimLe) -> Unit)
             Box(
                 modifier = Modifier
                     .padding(4.dp)
-                    .size(120.dp, 200.dp)
+                    .size(100.dp, 150.dp)
                     .border(2.dp, Color.Gray, RoundedCornerShape(8.dp))
                     .clickable { onItemClick(item) }
             ) {
@@ -126,8 +176,8 @@ fun RecycleView(listPhimLe: List<ItemPhimLe>, onItemClick: (ItemPhimLe) -> Unit)
                         .align(Alignment.BottomCenter)
                         .padding(8.dp)
                         .clickable {
-                    onItemClick(item)
-                    }
+                            onItemClick(item)
+                        }
                 )
             }
 

@@ -12,6 +12,10 @@ class PhimLeRepository {
         return apiService.getPhimLe().data // Assuming TVService has appropriate endpoints and data models
     }
 
+    suspend fun getPhimBo(): DataPhimLe {
+        return apiService.getPhimBo().data // Assuming TVService has appropriate endpoints and data models
+    }
+
     suspend fun playMovie(slug: String): List<Episode> {
         val response = apiService.playMovie(slug)
         Log.d("NguyenNK2", "Response from playMovie: $response")

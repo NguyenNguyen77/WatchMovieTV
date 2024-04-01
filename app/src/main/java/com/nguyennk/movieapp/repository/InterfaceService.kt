@@ -8,9 +8,12 @@ import retrofit2.http.Path
 interface InterfaceService {
 
     @GET("v1/api/danh-sach/phim-le")
-    suspend fun getPhimLe(): PhimLeResponse // Assuming TVResponse is a data class representing the response
+    suspend fun getPhimLe(): PhimLeResponse
+
+    @GET("v1/api/danh-sach/phim-bo")
+    suspend fun getPhimBo(): PhimLeResponse
 
     @GET("phim/{slug}")
-    suspend fun playMovie(@Path("slug")slug: String): DetailMovie // Assuming TVResponse is a data class representing the response
+    suspend fun playMovie(@Path("slug")slug: String): DetailMovie
 
 }
