@@ -53,6 +53,7 @@ import androidx.tv.material3.Text
 import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
+import com.nguyennk.movieapp.DetailInfoActivity
 import com.nguyennk.movieapp.R
 import com.nguyennk.movieapp.model.ItemPhimLe
 import com.nguyennk.movieapp.repository.PhimLeRepository
@@ -119,7 +120,7 @@ class MainActivity : ComponentActivity() {
                                 listPhimLe?.let { RecycleView(it) {
                                         selectedItem ->
                                     // Handle item click
-                                    val intent = Intent(this@MainActivity, PlayMovieActivity::class.java)
+                                    val intent = Intent(this@MainActivity, DetailInfoActivity::class.java)
                                     intent.putExtra("selectedMovie", selectedItem.slug)
                                     startActivity(intent)
                                 } }
@@ -137,7 +138,7 @@ class MainActivity : ComponentActivity() {
                                 listPhimBo?.let { RecycleView(it) {
                                         selectedItem ->
                                     // Handle item click
-                                    val intent = Intent(this@MainActivity, PlayMovieActivity::class.java)
+                                    val intent = Intent(this@MainActivity, DetailInfoActivity::class.java)
                                     intent.putExtra("selectedMovie", selectedItem.slug)
                                     startActivity(intent)
                                 } }

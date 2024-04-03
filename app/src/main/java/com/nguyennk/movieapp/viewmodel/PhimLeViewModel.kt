@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.nguyennk.movieapp.model.DataPhimLe
 import com.nguyennk.movieapp.model.Episode
+import com.nguyennk.movieapp.model.Movie
 import com.nguyennk.movieapp.repository.PhimLeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -19,9 +20,11 @@ class PhimLeViewModel(private val repository:PhimLeRepository) : ViewModel(),
     private val _movieShowLe = MutableLiveData<DataPhimLe>()
     private val _movieShowBo = MutableLiveData<DataPhimLe>()
     private val _playMovie = MutableLiveData<Episode>()
+    private val _detailInfoMovie = MutableLiveData<Movie>()
     val listPhimLe: LiveData<DataPhimLe> = _movieShowLe
     val listPhimBo: LiveData<DataPhimLe> = _movieShowBo
     val playMovie: LiveData<Episode> = _playMovie
+    val detailInfoMovie: LiveData<Movie> = _detailInfoMovie
     private val repo = PhimLeRepository()
     init {
         loadPhimLe()
@@ -55,8 +58,20 @@ class PhimLeViewModel(private val repository:PhimLeRepository) : ViewModel(),
     fun playMovie(slug:String) {
         viewModelScope.launch {
             try {
-                val playMovie = repo.playMovie(slug)
-                _playMovie.value = playMovie.get(0)
+                val playMovie = repo.playMovie(slug).episodes
+                _playMovie.value = playMovie[0]
+            } catch (e: Exception) {
+                // Handle error appropriately, such as showing an error message
+                Log.e("NguyenNK2", "Failed to load TV shows", e)
+            }
+        }
+    }
+
+    fun getInfoMovie(slug:String) {
+        viewModelScope.launch {
+            try {
+                val infoMovie = repo.playMovie(slug).movie
+                _detailInfoMovie.value = infoMovie
             } catch (e: Exception) {
                 // Handle error appropriately, such as showing an error message
                 Log.e("NguyenNK2", "Failed to load TV shows", e)

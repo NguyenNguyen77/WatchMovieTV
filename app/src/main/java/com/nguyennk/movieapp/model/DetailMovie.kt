@@ -53,14 +53,16 @@ data class Movie (
     val originName: String,
 
     val content: String,
+    @Json(name = "type")
     val type: String,
+    @Json(name = "status")
     val status: String,
 
     @Json(name = "poster_url")
-    val posterURL: String,
+    val poster_url: String,
 
     @Json(name = "thumb_url")
-    val thumbURL: String,
+    val thumb_url: String,
 
     @Json(name = "is_copyright")
     val isCopyright: Boolean,
@@ -72,24 +74,28 @@ data class Movie (
 
     @Json(name = "trailer_url")
     val trailerURL: String,
-
+    @Json(name = "time")
     val time: String,
 
     @Json(name = "episode_current")
-    val episodeCurrent: String,
+    val episode_current: String,
 
     @Json(name = "episode_total")
-    val episodeTotal: String,
-
+    val episode_total: String,
+    @Json(name = "quality")
     val quality: String,
     val lang: String,
     val notify: String,
     val showtimes: String,
     val year: Long,
     val view: Long,
+    @Json(name = "actor")
     val actor: List<String>,
+    @Json(name = "director")
     val director: List<String>,
+    @Json(name = "category")
     val category: List<CategoryMovie>,
+    @Json(name = "country")
     val country: List<CategoryMovie>
 )
 

@@ -1,6 +1,7 @@
 package com.nguyennk.movieapp.repository
 import android.util.Log
 import com.nguyennk.movieapp.model.DataPhimLe
+import com.nguyennk.movieapp.model.DetailMovie
 import com.nguyennk.movieapp.model.Episode
 
 
@@ -16,11 +17,11 @@ class PhimLeRepository {
         return apiService.getPhimBo().data // Assuming TVService has appropriate endpoints and data models
     }
 
-    suspend fun playMovie(slug: String): List<Episode> {
+    suspend fun playMovie(slug: String): DetailMovie {
         val response = apiService.playMovie(slug)
         Log.d("NguyenNK2", "Response from playMovie: $response")
 //        Log.d("NguyenNK2", "playMovie msg $apiService")
-        return response.episodes // Assuming TVService has appropriate endpoints and data models
+        return response // Assuming TVService has appropriate endpoints and data models
     }
 
 
