@@ -1,4 +1,4 @@
-package com.nguyennk.movieapp
+package com.nguyennk.movieapp.view
 
 import android.content.Context
 import android.content.Intent
@@ -39,7 +39,6 @@ import com.nguyennk.movieapp.repository.PhimLeRepository
 import com.nguyennk.movieapp.ui.theme.MovieAppTheme
 import com.nguyennk.movieapp.viewmodel.PhimLeViewModel
 import com.nguyennk.movieapp.viewmodel.PhimLeViewModelFactory
-import com.nguyennk.movieapp.view.PlayMovieActivity
 
 class DetailInfoActivity : ComponentActivity() {
     private val repository = PhimLeRepository()

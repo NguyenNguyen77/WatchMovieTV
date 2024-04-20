@@ -20,7 +20,7 @@
         android:theme="@style/Theme.MovieApp"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".DetailInfoActivity"
+            android:name=".view.DetailInfoActivity"
             android:exported="false"
             android:label="@string/title_activity_detail_info"
             android:theme="@style/Theme.MovieApp" />
