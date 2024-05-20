@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.privacysandbox.tools.core.model.Types.int
 import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
@@ -133,7 +134,6 @@ class MainActivity : ComponentActivity() {
         })
 
 
-
     }
 
     override fun onResume() {
@@ -156,7 +156,7 @@ fun RecycleView(listPhimLe: List<ItemPhimLe>, onItemClick: (ItemPhimLe) -> Unit)
                     //.border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
                     .clickable { onItemClick(item) }
             ){
-                Log.d("NguyenNK2", "item.thumbURL: https://img.phimapi.com/${item.poster_url}")
+                //Log.d("NguyenNK2", "item.thumbURL: https://img.phimapi.com/${item.poster_url}")
                 LoadImageFromUrlWithDefault("https://img.phimapi.com/"+item.poster_url, item.name)
                 Text(
                     text = item.name,

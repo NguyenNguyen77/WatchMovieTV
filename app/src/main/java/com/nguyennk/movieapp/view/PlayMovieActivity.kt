@@ -44,28 +44,25 @@ class PlayMovieActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Initialize ViewModel
-        phimLeViewModel = ViewModelProvider(this, PhimLeViewModelFactory(repository))[PhimLeViewModel::class.java]
+//        phimLeViewModel = ViewModelProvider(this, PhimLeViewModelFactory(repository))[PhimLeViewModel::class.java]
         val selectedItem = intent.getStringExtra("selectedMovie")
-        phimLeViewModel.playMovie(selectedItem.toString())
+        Log.d("NguyenNK2", "link movie $selectedItem")
         exoPlayer = ExoPlayer.Builder(applicationContext).build()
         playerView = StyledPlayerView(applicationContext)
-        phimLeViewModel.playMovie.observe(this, Observer {
-                data ->
-            Log.d("NguyenNK2", "data $data")
-            setContent {
-                MovieAppTheme {
-                    // A surface container using the 'background' color from the theme
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        shape = RectangleShape ,
-                        color = Color.Black
-                    ) {
-                        GreetingPreview(data.server_data[0].link_m3u8,exoPlayer, playerView)
-                        //eventClick()
-                    }
+
+        setContent {
+            MovieAppTheme {
+                // A surface container using the 'background' color from the theme
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    shape = RectangleShape ,
+                    color = Color.Black
+                ) {
+                    GreetingPreview(selectedItem,exoPlayer, playerView)
+                    //eventClick()
                 }
             }
-        })
+        }
 
     }
 

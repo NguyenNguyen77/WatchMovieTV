@@ -82,5 +82,8 @@ dependencies {
     implementation ("com.google.android.exoplayer:exoplayer:2.19.1")
 
     implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation ("androidx.compose.runtime:runtime-livedata:1.6.7")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0") // Ensure this is the latest version
+
 
 }

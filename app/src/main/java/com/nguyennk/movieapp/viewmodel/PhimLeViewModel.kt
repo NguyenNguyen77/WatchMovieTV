@@ -21,10 +21,12 @@ class PhimLeViewModel(private val repository:PhimLeRepository) : ViewModel(),
     private val _movieShowBo = MutableLiveData<DataPhimLe>()
     private val _playMovie = MutableLiveData<Episode>()
     private val _detailInfoMovie = MutableLiveData<Movie>()
+    private val _isPhimBo = MutableLiveData<Boolean>()
     val listPhimLe: LiveData<DataPhimLe> = _movieShowLe
     val listPhimBo: LiveData<DataPhimLe> = _movieShowBo
     val playMovie: LiveData<Episode> = _playMovie
     val detailInfoMovie: LiveData<Movie> = _detailInfoMovie
+    val isPhimBo: LiveData<Boolean> = _isPhimBo
     private val repo = PhimLeRepository()
     init {
         loadPhimLe()
@@ -37,7 +39,6 @@ class PhimLeViewModel(private val repository:PhimLeRepository) : ViewModel(),
                 val phimLe = repo.getPhimLe()
                 _movieShowLe.value = phimLe
             } catch (e: Exception) {
-                // Handle error appropriately, such as showing an error message
                 //Log.e(TAG, "Failed to load TV shows", e)
             }
         }
@@ -55,23 +56,26 @@ class PhimLeViewModel(private val repository:PhimLeRepository) : ViewModel(),
         }
     }
 
-    fun playMovie(slug:String) {
-        viewModelScope.launch {
-            try {
-                val playMovie = repo.playMovie(slug).episodes
-                _playMovie.value = playMovie[0]
-            } catch (e: Exception) {
-                // Handle error appropriately, such as showing an error message
-                Log.e("NguyenNK2", "Failed to load TV shows", e)
-            }
-        }
-    }
+//    fun playMovie(slug:String) {
+//        viewModelScope.launch {
+//            try {
+//                val playMovie = repo.playMovie(slug).episodes
+//                _playMovie.value = playMovie[0]
+//            } catch (e: Exception) {
+//                // Handle error appropriately, such as showing an error message
+//                Log.e("NguyenNK2", "Failed to load TV shows", e)
+//            }
+//        }
+//    }
 
     fun getInfoMovie(slug:String) {
         viewModelScope.launch {
             try {
-                val infoMovie = repo.playMovie(slug).movie
-                _detailInfoMovie.value = infoMovie
+                val infoMovie = repo.playMovie(slug)
+                _detailInfoMovie.value = infoMovie.movie
+                _playMovie.value = infoMovie.episodes[0]
+                Log.e("NguyenNK2", "episodes.size ${infoMovie.episodes[0].server_data.size}")
+                _isPhimBo.value = infoMovie.episodes[0].server_data.size>1
             } catch (e: Exception) {
                 // Handle error appropriately, such as showing an error message
                 Log.e("NguyenNK2", "Failed to load TV shows", e)

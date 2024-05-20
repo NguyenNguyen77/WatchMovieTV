@@ -12,6 +12,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -39,6 +42,8 @@ import com.nguyennk.movieapp.repository.PhimLeRepository
 import com.nguyennk.movieapp.ui.theme.MovieAppTheme
 import com.nguyennk.movieapp.viewmodel.PhimLeViewModel
 import com.nguyennk.movieapp.viewmodel.PhimLeViewModelFactory
+import androidx.compose.runtime.livedata.observeAsState
+import com.nguyennk.movieapp.model.ServerDatum
 
 class DetailInfoActivity : ComponentActivity() {
     private val repository = PhimLeRepository()
@@ -64,11 +69,24 @@ class DetailInfoActivity : ComponentActivity() {
                             showBanner(url = data.poster_url, description = data.slug)
                             Column {
                                 showInfoMovie(data)
-                                showButtonWatchMovie(this@DetailInfoActivity, data.slug)
+                                //showListEpisodes()
+                                if (phimLeViewModel.isPhimBo.observeAsState().value?.equals(true) == true) {
+                                    val listEpisode = mutableListOf<ServerDatum>()
+                                    phimLeViewModel.playMovie.observe(this@DetailInfoActivity,
+                                        Observer {
+                                            data-> data.server_data.forEach { item -> listEpisode.add(item) }
+                                        })
+                                    showListEpisodes(listEpisode, this@DetailInfoActivity)
+                                } else {
+                                    var slugMovie:String = ""
+                                    phimLeViewModel.playMovie.observe(this@DetailInfoActivity,
+                                        Observer {
+                                                data-> data.server_data.forEach { item -> slugMovie = data.server_data[0].link_m3u8 }
+                                        })
+                                    showButtonWatchMovie(this@DetailInfoActivity, slug = slugMovie)
+                                }
                             }
-
                         }
-
                     }
                 }
             }
@@ -79,7 +97,39 @@ class DetailInfoActivity : ComponentActivity() {
 
 
 }
+@Composable
+private fun showListEpisodes(playMovie: MutableList<ServerDatum>, context: Context) {
 
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(3), // 3 columns
+        modifier = Modifier.fillMaxSize()
+    ) {
+        items(playMovie) { item ->
+
+            Button(
+                onClick = {
+                    // Handle button click
+                    val intent = Intent(context, PlayMovieActivity::class.java)
+                    intent.putExtra("selectedMovie", item.link_m3u8)
+                    context.startActivity(intent)
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray, disabledContainerColor = Color.DarkGray),
+                modifier = Modifier
+                    .padding(10.dp)
+                    //.padding(horizontal = 24.dp, vertical = 12.dp)
+                    .size(140.dp, 50.dp),
+                shape = RoundedCornerShape(10.dp)
+            ) {
+                // Button text
+                Text(
+                    text = item.name,
+                    color = Color.Black,
+                    fontSize = 20.sp
+                )
+            }
+        }
+    }
+}
 @Composable
 private fun showInfoMovie(data: Movie?) {
     Text(
